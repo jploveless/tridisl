@@ -1,5 +1,5 @@
 # tridisl
-Triangular dislocation element wrapper functions
+Triangular dislocation element wrapper functions in Matlab
 
 Based on algorithms published in:
 
