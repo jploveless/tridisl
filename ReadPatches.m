@@ -45,7 +45,7 @@ if numel(filenames) > 0
       elseif filename(end-3:end) == '.mat'
          load(filename, 'c', 'v')
       elseif filename(end-2:end) == '.ts'
-         [c, v]                  = tsmsh(filename);
+         [c, v]                  = readts(filename);
       end
  
       % Ensure consistent node circulation direction     
