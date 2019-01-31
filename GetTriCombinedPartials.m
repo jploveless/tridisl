@@ -1,4 +1,4 @@
-function [Gu, Ge, Patches, Station] = GetTriCombinedPartials(Patches, Station, op)
+function [Gu, Ge, Patches, Station] = GetTriCombinedPartials(Patches, Station, op, pr)
 % Calculate elastic displacement and/or strain partial derivatives for triangular elements
 % 
 %   [Gu, Ge, tz] = GetTriCombinedPartials(Patches, Station, option)
@@ -19,6 +19,7 @@ function [Gu, Ge, Patches, Station] = GetTriCombinedPartials(Patches, Station, o
 %            option can also be an n-by-2 array, with each row corresponding to a row in the 
 %            Station structure's fields.  This may cut down on calculation time, only calculating
 %            the partials at the specified observation coordinates
+%   pr      : Optional specification of Poisson's ratio; default is 0.25
 %
 
 % Initialize variables
@@ -37,6 +38,10 @@ Patches.tz(Patches.tz == 0)                    = 3;
 [v1u, v2u, v3u]                                = deal(cell(max(op(:, 1)), nPatches));
 [v1e, v2e, v3e]                                = deal(cell(max(op(:, 2)), nPatches));
 projstrikes                                    = zeros(sum(Patches.nEl), 1);
+% Check for optional Poisson's ratio; use default if not specified
+if ~exist('pr', 'var')
+   pr                                          = 0.25;
+end
 
 % Calculate the requested partials
 if nPatches > 0
@@ -50,7 +55,7 @@ if nPatches > 0
          % Calculate elastic displacement for strike slip component
          [uxs, uys, uzs,...
           uxd, uyd, uzd,...
-          uxt, uyt, uzt]                       = tri_dislz_partials([p.px1, p.px2, p.px3], [p.py1, p.py2, p.py3], abs([p.z1, p.z2, p.z3]), s.tpx(op(:, 1)), s.tpy(op(:, 1)), abs(s.dep(op(:, 1))), 0.25);
+          uxt, uyt, uzt]                       = tri_dislz_partials([p.px1, p.px2, p.px3], [p.py1, p.py2, p.py3], abs([p.z1, p.z2, p.z3]), s.tpx(op(:, 1)), s.tpy(op(:, 1)), abs(s.dep(op(:, 1))), pr);
 	      v1u{iPatches}                         = reshape(-[uxs uys -uzs]', 3*sum(op(:, 1)), 1);
 	      v2u{iPatches}                         = reshape(-[uxd uyd -uzd]', 3*sum(op(:, 1)), 1);
 	      v3u{iPatches}                         = reshape(-[uxt uyt -uzt]', 3*sum(op(:, 1)), 1);
@@ -60,7 +65,7 @@ if nPatches > 0
       if sum(op(:, 2)) > 0
          [uxxs, uyys, uzzs, uxys, uxzs, uyzs,...
           uxxd, uyyd, uzzd, uxyd, uxzd, uyzd,...
-          uxxt, uyyt, uzzt, uxyt, uxzt, uyzt]  = tri_strain_fast_partials([p.px1, p.px2, p.px3], [p.py1, p.py2, p.py3], abs([p.z1, p.z2, p.z3]), s.tpx(op(:, 2)), s.tpy(op(:, 2)), abs(s.dep(op(:, 2))), 0.25);
+          uxxt, uyyt, uzzt, uxyt, uxzt, uyzt]  = tri_strain_fast_partials([p.px1, p.px2, p.px3], [p.py1, p.py2, p.py3], abs([p.z1, p.z2, p.z3]), s.tpx(op(:, 2)), s.tpy(op(:, 2)), abs(s.dep(op(:, 2))), pr);
          v1e{iPatches}                         = reshape(-[uxxs uyys uzzs uxys -uxzs -uyzs]', 6*sum(op(:, 2)), 1);
          v2e{iPatches}                         = reshape(-[uxxd uyyd uzzd uxyd -uxzd -uyzd]', 6*sum(op(:, 2)), 1);
          v3e{iPatches}                         = reshape(-[uxxt uyyt uzzt uxyt -uxzt -uyzt]', 6*sum(op(:, 2)), 1);
