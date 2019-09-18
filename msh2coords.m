@@ -56,14 +56,18 @@ while j < size(nodes, 1)
    % Get length of entity
    lent = str2num(nodes(j, :)); lent = lent(end);
    % Loops through that entity's nodes
-   for i = j+(1:lent)
-      % Convert to numbers
-      nodetest = str2num(nodes(i, :));
-      % Check size
-      if size(nodetest, 2) == 4 % If it contains 3 coordinates
-         nodekeep(nodetest(1), :) = nodetest(2:4); % Save its coordinates
+   if lent > 0
+      for i = j+(1:lent)
+         % Convert to numbers
+         nodetest = str2num(nodes(i, :));
+         % Check size
+         if size(nodetest, 2) == 4 % If it contains 3 coordinates
+            nodekeep(nodetest(1), :) = nodetest(2:4); % Save its coordinates
+         end
+         j = i+1;
       end
-      j = i+1;
+   else
+       j = j+1;
    end
 end
 c = nodekeep;
