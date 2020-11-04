@@ -7,11 +7,17 @@ function share = SideShare(v);
 %   v          = n x 3 array containing the 3 vertex indices of the n elements,
 %                assumes that values increase monotonically from 1:n
 % Outputs:
-%   share      = n x 3 array containing the indices of the elements sharing a
+%   share      = n x 3 array containing the indices of the m elements sharing a
 %                side with each of the n elements.  Zero values in the array
-%                indicate elements with fewer than three neighbors (i.e., on
+%                indicate elements with fewer than m neighbors (i.e., on
 %                the edge of the geometry).
 %
+% In general, elements will have 1 (mesh corners), 2 (mesh edges), or 3 
+% (mesh interiors) neighbors, but in the case of branching faults that 
+% have been adjusted with mergepatches, it's for edges and corners to 
+% also up to 3 neighbors.
+%
+
 
 % make side arrays containing vertex indices of sides
 [s1 s2 s3]                 = deal(sort(v(:, 1:2), 2), sort(v(:, 2:3), 2), sort([v(:, 3) v(:, 1)], 2));
