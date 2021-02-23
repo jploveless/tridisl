@@ -29,8 +29,8 @@ if numel(filenames) > 0
    if size(filenames, 1) == 1
       spaces                     = [0 findstr(filenames, ' ') length(filenames)+1];
       % Check which spaces are really separating files
-      notword                    = regexp(filenames(spaces(1:end-1)+1), '\W');
-      spaces                     = spaces([notword, length(spaces)]);
+%      notword                    = regexp(filenames(spaces(1:end-1)+1), '\W');
+%      spaces                     = spaces([notword, length(spaces)]);
       nfiles                     = max([1, length(spaces) - 1]);
       if nfiles == 1
          spaces                  = [0 length(filenames)+1];

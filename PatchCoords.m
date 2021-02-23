@@ -12,24 +12,28 @@ function p = PatchCoords(p);
 %
 % Returned variables:
 %      p   : an updated structure containing:
-%          .lon1 : longitude of all first vertices
-%          .lat1 : latitude of all first vertices
-%          .x1   : Geocentric x coordinate of all first vertices
-%          .y1   : Geocentric y coordinate of all first vertices
-%          .z1   : depth of all first vertices
-%          .lon2 : longitude of all second vertices
-%          .lat2 : latitude of all second vertices
-%          .x2   : Geocentric x coordinate of all second vertices
-%          .y2   : Geocentric y coordinate of all second vertices
-%          .z2   : depth of all second vertices
-%          .lon3 : longitude of all third vertices
-%          .lat3 : latitude of all third vertices
-%          .x3   : Geocentric x coordinate of all third vertices
-%          .y3   : Geocentric y coordinate of all third vertices
-%          .z3   : depth of all third vertices
-%          .lonc : longitude of element centroid
-%          .latc : latitude of element centroid
-%          .zc   : depth of element centroid
+%          .lon1   : longitude of all first vertices
+%          .lat1   : latitude of all first vertices
+%          .x1     : Geocentric x coordinate of all first vertices
+%          .y1     : Geocentric y coordinate of all first vertices
+%          .z1     : depth of all first vertices
+%          .lon2   : longitude of all second vertices
+%          .lat2   : latitude of all second vertices
+%          .x2     : Geocentric x coordinate of all second vertices
+%          .y2     : Geocentric y coordinate of all second vertices
+%          .z2     : depth of all second vertices
+%          .lon3   : longitude of all third vertices
+%          .lat3   : latitude of all third vertices
+%          .x3     : Geocentric x coordinate of all third vertices
+%          .y3     : Geocentric y coordinate of all third vertices
+%          .z3     : depth of all third vertices
+%          .lonc   : longitude of element centroid
+%          .latc   : latitude of element centroid
+%          .zc     : depth of element centroid
+%          .area   : area of element in square km
+%          .nv     : normal vector components of each triangle
+%          .strike : strike of each element
+%          .dip    : dip of each element
 %
 
 p.lon1                    = p.c(p.v(:, 1), 1);
@@ -44,16 +48,17 @@ p.z3                      = p.c(p.v(:, 3), 3);
 [p.lonc, p.latc, p.zc]    = centroid3([p.lon1 p.lon2 p.lon3],...
                                       [p.lat1 p.lat2 p.lat3],...
                                       [p.z1 p.z2 p.z3]);
-[p.x1, p.y1, dep]         = long_lat_to_xyz(deg_to_rad(p.lon1), deg_to_rad(p.lat1));
-[p.x2, p.y2, dep]         = long_lat_to_xyz(deg_to_rad(p.lon2), deg_to_rad(p.lat2));
-[p.x3, p.y3, dep]         = long_lat_to_xyz(deg_to_rad(p.lon3), deg_to_rad(p.lat3));
+[p.x1, p.y1, p.z1z]       = long_lat_to_xyz(deg_to_rad(p.lon1), deg_to_rad(p.lat1), 6371+p.z1);
+[p.x2, p.y2, p.z2z]       = long_lat_to_xyz(deg_to_rad(p.lon2), deg_to_rad(p.lat2), 6371+p.z2);
+[p.x3, p.y3, p.z3z]       = long_lat_to_xyz(deg_to_rad(p.lon3), deg_to_rad(p.lat3), 6371+p.z3);
 [p.xc, p.yc]              = centroid3([p.x1 p.x2 p.x3],...
                                       [p.y1 p.y2 p.y3],...
-                                      [p.z1 p.z2 p.z3]);
+                                      [p.z1z p.z2z p.z3z]);
 z1r                       = 1+p.z1./6371;
 z2r                       = 1+p.z2./6371;
 z3r                       = 1+p.z3./6371;
-p.nv                        = cross([deg2rad(p.lon2-p.lon1), deg2rad(p.lat2-p.lat1), z2r-z1r], [deg2rad(p.lon3-p.lon1), deg2rad(p.lat3-p.lat1), z3r-z1r], 2);
+p.area                    = mag(cross([p.x2, p.y2, p.z2z] - [p.x1, p.y1, p.z1z], [p.x3, p.y3, p.z3z] - [p.x1, p.y1, p.z1z]), 2)./2; % Area in km^2
+p.nv                      = cross([deg2rad(p.lon2-p.lon1), deg2rad(p.lat2-p.lat1), z2r-z1r], [deg2rad(p.lon3-p.lon1), deg2rad(p.lat3-p.lat1), z3r-z1r], 2);
 % Enforce clockwise circulation
 p.nv(p.nv(:, 3) < 0, :)   = -p.nv(p.nv(:, 3) < 0, :);
 [s, d]                    = cart2sph(p.nv(:, 1), p.nv(:, 2), p.nv(:, 3));
