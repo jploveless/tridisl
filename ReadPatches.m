@@ -64,7 +64,12 @@ if numel(filenames) > 0
       % Make an equal number of decimal places
       c                          = [str2num(num2str(c(:, 1), '%3.3f')), str2num(num2str(c(:, 2), '%3.3f')), str2num(num2str(c(:, 3), '%3.3f'))]; % Consistent with precision of station, segment files. We need a consistent precision when checking for existing kernels
       Patches.c                  = [Patches.c; c];
-      Patches.nEl                = [Patches.nEl; size(v, 1)];
-      Patches.nc                 = [Patches.nc; size(c, 1)];
+      if ~exist('nc', 'var')
+         Patches.nEl             = [Patches.nEl; size(v, 1)];
+         Patches.nc              = [Patches.nc; size(c, 1)];
+      else
+         Patches.nEl             = [Patches.nEl; nEl];
+         Patches.nc              = [Patches.nc; nc];
+      end
    end
 end
