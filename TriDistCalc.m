@@ -17,12 +17,12 @@ function dists = TriDistCalc(share, xc, yc, zc);
 %						  than 3 elements that share a side with the element in that row.
 %
 
-dists												= zeros(size(share));
+dists = zeros(size(share));
 
 for i = 1:size(dists, 1);
-	share(i, find(share(i, :) == 0)) 	= i;
-	dists(i, :)									= sqrt((xc(i) - xc(share(i, :))).^2 + ...
-															 (yc(i) - yc(share(i, :))).^2 + ...
-															 (zc(i) - zc(share(i, :))).^2);
+	share(i, find(share(i, :) == 0)) = i;
+	dists(i, :) = sqrt((xc(i) - xc(share(i, :))).^2 + ...
+					   (yc(i) - yc(share(i, :))).^2 + ...
+					   (zc(i) - zc(share(i, :))).^2);
 end
 														 
