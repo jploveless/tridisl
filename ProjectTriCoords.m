@@ -113,20 +113,12 @@ p.py3                         = diag(my(nsta+2*ntri + (1:ntri), :));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Scale to proper distances by multiplying by Earth's radius  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% s.tpx                         = s.tpx.*repmat(R, nsta, ntri);
-% s.tpy                         = s.tpy.*repmat(R, nsta, ntri);
-% p.px1                         = p.px1.*R;
-% p.py1                         = p.py1.*R;
-% p.px2                         = p.px2.*R;
-% p.py2                         = p.py2.*R;
-% p.px3                         = p.px3.*R;
-% p.py3                         = p.py3.*R; 
+s.tpx                         = s.tpx.*repmat(R, nsta, ntri);
+s.tpy                         = s.tpy.*repmat(R, nsta, ntri);
+p.px1                         = p.px1.*R;
+p.py1                         = p.py1.*R;
+p.px2                         = p.px2.*R;
+p.py2                         = p.py2.*R;
+p.px3                         = p.px3.*R;
+p.py3                         = p.py3.*R; 
 
-s.tpx                         = s.tpx.*repmat(R - abs(s.dep), 1, ntri);
-s.tpy                         = s.tpy.*repmat(R - abs(s.dep), 1, ntri);
-p.px1                         = p.px1.*(R);
-p.py1                         = p.py1.*(R);
-p.px2                         = p.px2.*(R);
-p.py2                         = p.py2.*(R);
-p.px3                         = p.px3.*(R);
-p.py3                         = p.py3.*(R); 
