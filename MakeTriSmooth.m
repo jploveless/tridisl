@@ -40,7 +40,7 @@ selfs = -lcoeff.*sum(idists.*s, 2);
 
 % off diagonals
 offdi = repmat(lcoeff, 1, 3).*idists.*s;
-keyboard
+
 % place the weights into the smoothing operator
 for i = 1:n
    for j = 1:3
